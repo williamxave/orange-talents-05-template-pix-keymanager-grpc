@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zup.william";
+option java_outer_classname = "ProjetoKeyManagerPixGRPC";
+option objc_class_prefix = "HLW";
+
+package br.com.zup.william;
+
+service ProjetoKeyManagerPixGRPCService {
+  rpc send (ProjetoKeyManagerPixGRPCRequest) returns (ProjetoKeyManagerPixGRPCReply) {}
+}
+
+message ProjetoKeyManagerPixGRPCRequest {
+  string name = 1;
+}
+
+message ProjetoKeyManagerPixGRPCReply {
+  string message = 1;
+}
