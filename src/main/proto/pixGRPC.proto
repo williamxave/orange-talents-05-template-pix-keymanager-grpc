@@ -2,13 +2,36 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "br.com.zup.william";
-option java_outer_classname = "ProjetoKeyManagerPixGRPC";
+option java_outer_classname = "pixGRPC";
 option objc_class_prefix = "HLW";
 
 package br.com.zup.william;
 
-service ProjetoKeyManagerPixGRPCService {
-  rpc send (ProjetoKeyManagerPixGRPCRequest) returns (ProjetoKeyManagerPixGRPCReply) {}
+service RegistraKeyManagerPixGRPCService {
+  rpc regista (RegistraChavePixRequest) returns (RegistraChavePixResponse){}
+}
+message  RegistraChavePixRequest{
+  string idDoCliente = 1;
+  TipoDeChave tipoDeChave = 2;
+  string  valorDaChave = 3;
+  TipoDeConta tipoDeConta = 4;
+}
+enum TipoDeChave{
+  TIPO_DE_CHAVE_DESCONHECIDA = 0;
+  CPF = 1;
+  TELEFONE_CELULAR = 2;
+  EMAIL = 3;
+  CHAVE_ALEATORIA = 4;
+}
+enum TipoDeConta {
+  CONTA_DESCONHECIDA = 0;
+  CONTA_CORRENTE = 1;
+  CONTA_POUPANCA = 2;
+
+}
+message  RegistraChavePixResponse{
+  string idDoCliente = 1;
+  string chaveDoCliente = 2;
 }
 
 message ProjetoKeyManagerPixGRPCRequest {

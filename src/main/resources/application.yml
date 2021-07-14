@@ -11,6 +11,14 @@ datasources:
 jpa.default.properties.hibernate.hbm2ddl.auto: update
 jpa.default.properties.hibernate.show_sql: true
 
+grpc:
+  server:
+    port: ${SERVER_PORT:50051}
+
 logger:
   levels:
     io.micronaut.transaction: DEBUG
+
+url:
+  itau:
+    erp: ${URL.ERP.ITAU:`http://localhost:9091`}
