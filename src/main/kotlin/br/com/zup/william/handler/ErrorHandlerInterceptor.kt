@@ -6,6 +6,7 @@ import io.grpc.stub.StreamObserver
 import io.micronaut.aop.InterceptorBean
 import io.micronaut.aop.MethodInterceptor
 import io.micronaut.aop.MethodInvocationContext
+import java.lang.IllegalArgumentException
 import javax.inject.Singleton
 import javax.validation.ConstraintViolationException
 
@@ -23,7 +24,6 @@ class ErrorHandlerInterceptor : MethodInterceptor<Any, Any> {
             val status = when (e) {
 
                 is ConstraintViolationException -> Status.INVALID_ARGUMENT
-                        .withCause(e.cause)
                         .withDescription("Campo inválido")
 
                 is ChavePixException -> Status.ALREADY_EXISTS

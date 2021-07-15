@@ -23,7 +23,7 @@ class ValidaChavePix(
         log.info("Verficando se chave já existe")
         //Verifica se a chave já existe no banco de dados
         if (chavePixRepository.existsByValorDaChave(novaChavePixDto.valorDaChave)) {
-            throw ChavePixException("Chave ${novaChavePixDto.valorDaChave} já existente!")
+            throw ChavePixException("Chave já existente!")
         }
         log.info("Chave aprovada")
 
