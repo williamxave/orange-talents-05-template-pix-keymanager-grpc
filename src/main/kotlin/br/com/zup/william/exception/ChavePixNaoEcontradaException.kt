@@ -1,3 +1,5 @@
 package br.com.zup.william.exception
 
-class ChavePixNaoEcontradaException(val msg: String): Exception(msg)
+import java.lang.RuntimeException
+
+class ChavePixNaoEcontradaException(val msg: String): RuntimeException(msg)
