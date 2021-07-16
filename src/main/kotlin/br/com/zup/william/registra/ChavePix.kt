@@ -1,5 +1,6 @@
 package br.com.zup.william.registra
 
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -14,7 +15,6 @@ class ChavePix(
         @Embedded @field:NotNull val conta: Conta
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    val id: String = UUID.randomUUID().toString()
 
 }

@@ -10,6 +10,20 @@ package br.com.zup.william;
 service RegistraKeyManagerPixGRPCService {
   rpc regista (RegistraChavePixRequest) returns (RegistraChavePixResponse){}
 }
+
+service RemoveKeyManagerPixGRPCService{
+  rpc remove (RemoveChavePixRequest) returns (RemoveChavePixResponse){}
+}
+
+message RemoveChavePixRequest{
+  string pixId = 1;
+  string idDoCliente = 2;
+}
+
+message RemoveChavePixResponse{
+  string mensagem = 1;
+}
+
 message  RegistraChavePixRequest{
   string idDoCliente = 1;
   TipoDeChave tipoDeChave = 2;
@@ -31,7 +45,7 @@ enum TipoDeConta {
 }
 message  RegistraChavePixResponse{
   string idDoCliente = 1;
-  string chaveDoCliente = 2;
+  string pixId = 2;
 }
 
 message ProjetoKeyManagerPixGRPCRequest {

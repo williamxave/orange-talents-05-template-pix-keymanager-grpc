@@ -1,12 +1,12 @@
 package br.com.zup.william.handler
 
 import br.com.zup.william.exception.ChavePixException
+import br.com.zup.william.exception.ChavePixNaoEcontradaException
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import io.micronaut.aop.InterceptorBean
 import io.micronaut.aop.MethodInterceptor
 import io.micronaut.aop.MethodInvocationContext
-import java.lang.IllegalArgumentException
 import javax.inject.Singleton
 import javax.validation.ConstraintViolationException
 
@@ -27,6 +27,9 @@ class ErrorHandlerInterceptor : MethodInterceptor<Any, Any> {
                         .withDescription("Campo inválido")
 
                 is ChavePixException -> Status.ALREADY_EXISTS
+                        .withDescription(e.message)
+
+                is ChavePixNaoEcontradaException -> Status.NOT_FOUND
                         .withDescription(e.message)
 
                 else -> Status.INTERNAL

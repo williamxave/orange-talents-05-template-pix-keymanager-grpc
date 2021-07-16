@@ -32,7 +32,7 @@ class RegistaChavePixEndPoint(@Inject val validaChavePix: ValidaChavePix) :
 
         responseObserver.onNext(RegistraChavePixResponse.newBuilder()
                 .setIdDoCliente(chaveValidad.clienteId)
-                .setChaveDoCliente(chaveValidad.valorDaChave)
+                .setPixId(chaveValidad.id)
                 .build())
         responseObserver.onCompleted()
 

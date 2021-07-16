@@ -131,7 +131,7 @@ internal class RegistaChavePixEndPointTest(
         val dadosParaRequest = pegarRequest("+5551980627198", TipoDeChave.TELEFONE_CELULAR)
         val response = registrar(dadosParaRequest)
         assertEquals(dadosParaRequest.idDoCliente, response.idDoCliente)
-        assertNotNull(response.chaveDoCliente)
+        assertNotNull(response.pixId)
     }
 
     @Test
@@ -139,7 +139,7 @@ internal class RegistaChavePixEndPointTest(
         val dadosParaRequest = pegarRequest("87664996074", TipoDeChave.CPF)
         val response = registrar(dadosParaRequest)
         assertEquals(dadosParaRequest.idDoCliente, response.idDoCliente)
-        assertNotNull(response.chaveDoCliente)
+        assertNotNull(response.pixId)
     }
 
     @Test
@@ -147,7 +147,7 @@ internal class RegistaChavePixEndPointTest(
         val dadosParaRequest = pegarRequest("", TipoDeChave.CHAVE_ALEATORIA)
         val response = registrar(dadosParaRequest)
         assertEquals(dadosParaRequest.idDoCliente, response.idDoCliente)
-        assertNotNull(response.chaveDoCliente)
+        assertNotNull(response.pixId)
     }
 
 
@@ -156,7 +156,7 @@ internal class RegistaChavePixEndPointTest(
         val dadosParaRequest = pegarRequest("william@email.com", TipoDeChave.EMAIL)
         val response = registrar(dadosParaRequest)
         assertEquals(dadosParaRequest.idDoCliente, response.idDoCliente)
-        assertNotNull(response.chaveDoCliente)
+        assertNotNull(response.pixId)
     }
 
     @Test
