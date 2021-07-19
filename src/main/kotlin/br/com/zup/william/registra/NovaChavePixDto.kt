@@ -24,7 +24,7 @@ data class NovaChavePixDto(
     fun toModel(conta: Conta): ChavePix {
         return ChavePix(
                 clienteId = clienteId,
-                valorDaChave = if (tipoDeChave == TipoDeChave.CHAVE_ALEATORIA) UUID.randomUUID().toString() else valorDaChave!!,
+                valorDaChave =if (tipoDeChave == TipoDeChave.CHAVE_ALEATORIA) UUID.randomUUID().toString() else valorDaChave!!,
                 tipoDeChave = tipoDeChave,
                 tipoDeConta = br.com.zup.william.registra.TipoDeConta.valueOf(this.tipoDeConta.toString()),
                 conta = conta

@@ -2,7 +2,11 @@ package br.com.zup.william.handler
 
 import br.com.zup.william.exception.ChavePixException
 import br.com.zup.william.exception.ChavePixNaoEcontradaException
+import com.google.rpc.BadRequest
+import com.google.rpc.Code
 import io.grpc.Status
+import io.grpc.StatusRuntimeException
+import io.grpc.protobuf.StatusProto
 import io.grpc.stub.StreamObserver
 import io.micronaut.aop.InterceptorBean
 import io.micronaut.aop.MethodInterceptor
@@ -32,11 +36,31 @@ class ErrorHandlerInterceptor : MethodInterceptor<Any, Any> {
                 is ChavePixNaoEcontradaException -> Status.NOT_FOUND
                         .withDescription(e.message)
 
+                is IllegalArgumentException -> Status.INVALID_ARGUMENT
+                        .withDescription(e.message)
+
                 else -> Status.INTERNAL
                         .withDescription("Erro Desconhecido!")
             }
             responseObserver.onError(status.asRuntimeException())
         }
         return null
+    }
+
+    private fun handlerConstraintValidationException(e: ConstraintViolationException): StatusRuntimeException {
+        val badRequest = BadRequest.newBuilder()
+                .addAllFieldViolations(e.constraintViolations.map {
+                    BadRequest.FieldViolation.newBuilder()
+                            .setField(it.propertyPath.last().name)
+                            .setDescription(it.message)
+                            .build()
+                }).build()
+
+        val  statusProto = com.google.rpc.Status.newBuilder()
+                .setCode(Code.INVALID_ARGUMENT_VALUE)
+                .setMessage("Parametros inválidos")
+                .addDetails(com.google.protobuf.Any.pack(badRequest))
+                .build()
+        return StatusProto.toStatusRuntimeException(statusProto)
     }
 }

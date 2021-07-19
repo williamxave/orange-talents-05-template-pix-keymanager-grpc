@@ -41,14 +41,15 @@ internal class RegistaChavePixEndPointTest(
     }
 
     @Test
-    fun `deve validar tipo EMAIL`(){
-        with(br.com.zup.william.registra.TipoDeChave.EMAIL){
+    fun `deve validar tipo EMAIL`() {
+        with(br.com.zup.william.registra.TipoDeChave.EMAIL) {
             assertTrue(valida("william@email.com"))
         }
     }
+
     @Test
-    fun `Nao deve validar tipo EMAIL`(){
-        with(br.com.zup.william.registra.TipoDeChave.EMAIL){
+    fun `Nao deve validar tipo EMAIL`() {
+        with(br.com.zup.william.registra.TipoDeChave.EMAIL) {
             assertFalse(valida("email errado"))
             assertFalse(valida(""))
             assertFalse(valida(null))
@@ -56,15 +57,15 @@ internal class RegistaChavePixEndPointTest(
     }
 
     @Test
-    fun `deve validar o tipo CPF`(){
-        with(br.com.zup.william.registra.TipoDeChave.CPF){
+    fun `deve validar o tipo CPF`() {
+        with(br.com.zup.william.registra.TipoDeChave.CPF) {
             assertTrue(valida("87664996074"))
         }
     }
 
     @Test
-    fun `Nao deve validar tipo CPF`(){
-        with(br.com.zup.william.registra.TipoDeChave.CPF){
+    fun `Nao deve validar tipo CPF`() {
+        with(br.com.zup.william.registra.TipoDeChave.CPF) {
             assertFalse(valida("8766499607A"))
             assertFalse(valida(""))
             assertFalse(valida(null))
@@ -72,15 +73,15 @@ internal class RegistaChavePixEndPointTest(
     }
 
     @Test
-    fun `deve validar o tipo CELULAR`(){
-        with(br.com.zup.william.registra.TipoDeChave.TELEFONE_CELULAR){
+    fun `deve validar o tipo CELULAR`() {
+        with(br.com.zup.william.registra.TipoDeChave.TELEFONE_CELULAR) {
             assertTrue(valida("+5551980629876"))
         }
     }
 
     @Test
-    fun `Nao deve validar tipo CELULAR`(){
-        with(br.com.zup.william.registra.TipoDeChave.CPF){
+    fun `Nao deve validar tipo CELULAR`() {
+        with(br.com.zup.william.registra.TipoDeChave.CPF) {
             assertFalse(valida("+5544930626198"))
             assertFalse(valida(""))
             assertFalse(valida("+554598062719"))
@@ -89,27 +90,29 @@ internal class RegistaChavePixEndPointTest(
     }
 
     @Test
-    fun `deve validar o tipo ALEATORIA`(){
-        with(br.com.zup.william.registra.TipoDeChave.CHAVE_ALEATORIA){
+    fun `deve validar o tipo ALEATORIA`() {
+        with(br.com.zup.william.registra.TipoDeChave.CHAVE_ALEATORIA) {
             assertTrue(valida(""))
         }
     }
 
     @Test
-    fun `Nao deve validar tipo ALEATORIA`(){
-        with(br.com.zup.william.registra.TipoDeChave.CHAVE_ALEATORIA){
+    fun `Nao deve validar tipo ALEATORIA`() {
+        with(br.com.zup.william.registra.TipoDeChave.CHAVE_ALEATORIA) {
             assertFalse(valida("qualquer valor passado"))
         }
     }
 
     @Test
-    fun `deve verificar se chave pix ja existe no banco`(){
+    fun `deve verificar se chave pix ja existe no banco`() {
 
         val conta = Conta(
                 "william",
                 "87664996074",
                 "ITAU",
-                "1234"
+                "1234",
+                "0001",
+                "3306"
 
         )
         val chavePix = ChavePix(
@@ -202,7 +205,10 @@ internal class RegistaChavePixEndPointTest(
                 "william",
                 "87664996074",
                 "ITAU",
-                "1234"
+                "1234",
+                "0001",
+                "3306"
+
 
         )
         val chavePix = ChavePix(
@@ -229,7 +235,7 @@ internal class RegistaChavePixEndPointTest(
 
 
     fun registrar(dadosParaRequest: RegistraChavePixRequest): RegistraChavePixResponse {
-        Mockito.`when`(itau.busca(dadosParaRequest.idDoCliente)).thenReturn(dadosDeResposta())
+        Mockito.`when`(itau.busca(dadosParaRequest.idDoCliente, dadosParaRequest.tipoDeConta.toString())).thenReturn(dadosDeResposta())
         return grpcClient.regista(dadosParaRequest)
     }
 
@@ -247,14 +253,20 @@ internal class RegistaChavePixEndPointTest(
     fun dadosDeResposta(): MutableHttpResponse<ContaResponse>? {
         return HttpResponse.ok<ContaResponse>(
                 ContaResponse(
-                        "c56dfef4-7901-44fb-84e2-a2cefb157890",
-                        "william",
-                        "87664996074",
-                        InstituicaoResponse(
-                                "ITAU",
-                                "1234")
-                )
+                        TipoDeConta.CONTA_CORRENTE,
+                        Instituicao(
+                                "ITAÚ UNIBANCO S.A.",
+                                "60701190"
+                        ),
+                        "0001",
+                        "291900",
+                        Titular(
+                                "c56dfef4-7901-44fb-84e2-a2cefb157890",
+                                "Rafael M C Ponte",
+                                "02467781054"
+                        )
 
+                )
         )
     }
 

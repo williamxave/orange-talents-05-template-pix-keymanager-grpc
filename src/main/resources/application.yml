@@ -22,3 +22,6 @@ logger:
 url:
   itau:
     erp: ${URL.ERP.ITAU:`http://localhost:9091`}
+
+bcb:
+  url: ${URL.BCB:`http://localhost:8082`}

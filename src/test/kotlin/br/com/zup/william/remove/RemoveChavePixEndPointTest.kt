@@ -82,7 +82,10 @@ internal class RemoveChavePixEndPointTest(
                 "william",
                 "87664996074",
                 "ITAU",
-                "1234"
+                "1234",
+                "0001",
+                "3306"
+
 
         )
         val chavePix = ChavePix(

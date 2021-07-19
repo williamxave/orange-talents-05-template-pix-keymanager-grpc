@@ -17,6 +17,7 @@ enum class TipoDeChave {
                 isValid(valorDaChave, null)
             }
         }
+
     },
     TELEFONE_CELULAR {
         override fun valida(valorDaChave: String?): Boolean {
@@ -36,6 +37,7 @@ enum class TipoDeChave {
                 isValid(valorDaChave, null)
             }
         }
+
     },
     CHAVE_ALEATORIA {
         override fun valida(valorDaChave: String?): Boolean {
