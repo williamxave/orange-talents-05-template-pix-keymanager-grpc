@@ -1,9 +1,10 @@
 package br.com.zup.william.registra
 
-import br.com.zup.william.*
+import br.com.zup.william.RegistraChavePixRequest
+import br.com.zup.william.RegistraChavePixResponse
+import br.com.zup.william.RegistraKeyManagerPixGRPCServiceGrpc
 import br.com.zup.william.TipoDeChave
 import br.com.zup.william.registrabcb.*
-import com.google.api.Http
 import io.grpc.ManagedChannel
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
@@ -11,8 +12,6 @@ import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
 import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.MutableHttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.Before
@@ -304,7 +303,7 @@ internal class RegistaChavePixEndPointTest(
                         "60701190",
                         "0001",
                         "3306",
-                        TipoDaContaBCB.SVGS
+                        BankAccount.AccountType.SVGS
                 ), owner = Owner(
                 type = TipoDePessoa.NATURAL_PERSON,
                 "william",

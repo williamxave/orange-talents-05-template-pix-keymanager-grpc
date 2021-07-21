@@ -1,6 +1,7 @@
 package br.com.zup.william.registrabcb
 
 import br.com.zup.william.registra.ChavePix
+import br.com.zup.william.registra.TipoDeConta
 
 data class CreateKeyPixRequest(
         val keyType: KeyType,
@@ -19,7 +20,7 @@ data class CreateKeyPixRequest(
                             chavePix.conta.ispb,
                             chavePix.conta.agencia,
                             chavePix.conta.numero,
-                            accountType = TipoDaContaBCB.by(tipo = chavePix.tipoDeConta)
+                            accountType = BankAccount.AccountType.by(chavePix.tipoDeConta)
                     ), owner = Owner(
                     type = TipoDePessoa.NATURAL_PERSON,
                     chavePix.conta.nome,
@@ -34,8 +35,23 @@ data class BankAccount(
         val participant: String,
         val branch: String,
         val accountNumber: String,
-        val accountType: TipoDaContaBCB
-)
+        val accountType: AccountType
+){
+    enum class AccountType() {
+
+        CACC,
+        SVGS;
+
+        companion object {
+            fun by(domainType: TipoDeConta): AccountType {
+                return when (domainType) {
+                    TipoDeConta.CONTA_CORRENTE -> CACC
+                    TipoDeConta.CONTA_POUPANCA -> SVGS
+                }
+            }
+        }
+    }
+}
 
 data class Owner(
         val type: TipoDePessoa,

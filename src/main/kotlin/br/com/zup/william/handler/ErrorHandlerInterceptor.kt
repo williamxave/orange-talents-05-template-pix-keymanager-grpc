@@ -2,16 +2,12 @@ package br.com.zup.william.handler
 
 import br.com.zup.william.exception.ChavePixException
 import br.com.zup.william.exception.ChavePixNaoEcontradaException
-import com.google.rpc.BadRequest
-import com.google.rpc.Code
+import br.com.zup.william.exception.FiltroInvalidoException
 import io.grpc.Status
-import io.grpc.StatusRuntimeException
-import io.grpc.protobuf.StatusProto
 import io.grpc.stub.StreamObserver
 import io.micronaut.aop.InterceptorBean
 import io.micronaut.aop.MethodInterceptor
 import io.micronaut.aop.MethodInvocationContext
-import java.lang.IllegalStateException
 import javax.inject.Singleton
 import javax.validation.ConstraintViolationException
 
@@ -40,28 +36,14 @@ class ErrorHandlerInterceptor : MethodInterceptor<Any, Any> {
                 is IllegalStateException -> Status.INVALID_ARGUMENT
                         .withDescription(e.message)
 
+                is  FiltroInvalidoException -> Status.INVALID_ARGUMENT
+                        .withDescription(e.message)
+
                 else -> Status.INTERNAL
                         .withDescription("Erro Desconhecido!")
             }
             responseObserver.onError(status.asRuntimeException())
         }
         return null
-    }
-
-    private fun handlerConstraintValidationException(e: ConstraintViolationException): StatusRuntimeException {
-        val badRequest = BadRequest.newBuilder()
-                .addAllFieldViolations(e.constraintViolations.map {
-                    BadRequest.FieldViolation.newBuilder()
-                            .setField(it.propertyPath.last().name)
-                            .setDescription(it.message)
-                            .build()
-                }).build()
-
-        val  statusProto = com.google.rpc.Status.newBuilder()
-                .setCode(Code.INVALID_ARGUMENT_VALUE)
-                .setMessage("Parametros inválidos")
-                .addDetails(com.google.protobuf.Any.pack(badRequest))
-                .build()
-        return StatusProto.toStatusRuntimeException(statusProto)
     }
 }

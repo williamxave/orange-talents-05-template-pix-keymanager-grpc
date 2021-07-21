@@ -20,6 +20,9 @@ class ChavePix(
 
     var criadaEm: LocalDateTime? = null
 
+
+    fun pertenceAo(clienteId: String) = this.clienteId.equals(clienteId)
+
     //Quando registrar no bcb e a chave for random o outro sistema vai gerar a chave
     fun chaveAleatoria(): Boolean{
         return tipoDeChave == TipoDeChave.CHAVE_ALEATORIA

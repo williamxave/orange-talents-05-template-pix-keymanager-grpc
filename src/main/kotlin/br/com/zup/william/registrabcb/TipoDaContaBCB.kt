@@ -19,5 +19,4 @@ enum class TipoDaContaBCB(val tipo: TipoDeConta) {
             return mapping[tipo] ?: throw  IllegalArgumentException("Tipo de chave não existe")
         }
     }
-
 }

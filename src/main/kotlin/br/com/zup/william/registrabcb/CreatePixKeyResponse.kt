@@ -7,7 +7,7 @@ class CreatePixKeyResponse(
         val key: String,
         val bankAccount: BankAccountResponse,
         val owner: OwnerResponse,
-        val createdAt: LocalDateTime
+        val createdAt: LocalDateTime?
 )
 
 data class BankAccountResponse(
