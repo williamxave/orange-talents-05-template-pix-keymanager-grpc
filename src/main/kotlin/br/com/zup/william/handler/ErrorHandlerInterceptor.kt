@@ -11,6 +11,7 @@ import io.grpc.stub.StreamObserver
 import io.micronaut.aop.InterceptorBean
 import io.micronaut.aop.MethodInterceptor
 import io.micronaut.aop.MethodInvocationContext
+import java.lang.IllegalStateException
 import javax.inject.Singleton
 import javax.validation.ConstraintViolationException
 
@@ -36,7 +37,7 @@ class ErrorHandlerInterceptor : MethodInterceptor<Any, Any> {
                 is ChavePixNaoEcontradaException -> Status.NOT_FOUND
                         .withDescription(e.message)
 
-                is IllegalArgumentException -> Status.INVALID_ARGUMENT
+                is IllegalStateException -> Status.INVALID_ARGUMENT
                         .withDescription(e.message)
 
                 else -> Status.INTERNAL

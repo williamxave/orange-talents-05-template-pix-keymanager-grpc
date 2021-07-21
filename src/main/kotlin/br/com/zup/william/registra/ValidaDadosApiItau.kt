@@ -11,6 +11,5 @@ interface ValidaDadosApiItau {
 
     @Get("/api/v1/clientes/{clienteId}/contas{?tipo}")
     fun busca(@PathVariable("clienteId") clienteId: String,
-              @QueryValue("tipo") tipo: String):
-            HttpResponse<ContaResponse>
+              @QueryValue("tipo") tipo: String): HttpResponse<ContaResponse>
 }

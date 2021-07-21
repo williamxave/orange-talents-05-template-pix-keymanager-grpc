@@ -22,6 +22,8 @@ message RemoveChavePixRequest{
 
 message RemoveChavePixResponse{
   string mensagem = 1;
+  string pixId = 2;
+  string idDoCliente = 3;
 }
 
 message  RegistraChavePixRequest{

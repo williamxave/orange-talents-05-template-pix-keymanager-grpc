@@ -45,8 +45,9 @@ dependencies {
 
 
 
-
+    kaptTest "io.micronaut:micronaut-inject-java"
     testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.8.0")
     testImplementation("org.testcontainers:mysql")
     testImplementation("org.testcontainers:testcontainers")
     implementation("io.micronaut:micronaut-validation")

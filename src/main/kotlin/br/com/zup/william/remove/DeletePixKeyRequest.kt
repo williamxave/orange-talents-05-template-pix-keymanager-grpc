@@ -5,10 +5,10 @@ import io.micronaut.core.annotation.Introspected
 
 @Introspected
 class DeletePixKeyRequest(
-        val key: String,
-        val participant: String
+        val key: String?,
+        val participant: String?
 ) {
 
-    constructor(chave: String): this(chave,Conta.ITAU_UNIBANCO_ISPB)
+    constructor(chave: String?): this(chave,Conta.ITAU_UNIBANCO_ISPB)
 
 }
