@@ -8,6 +8,7 @@ import br.com.zup.william.registrabcb.*
 import io.grpc.ManagedChannel
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
+import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
 import io.micronaut.grpc.server.GrpcServerChannel
@@ -201,33 +202,33 @@ internal class RegistaChavePixEndPointTest(
         assertEquals("Campo inválido", error.status.description)
     }
 
-//    @Test
-//    fun `deve cadastrar uma chave pix`() {
-//        //cenario
-//        Mockito.`when`(itau1.busca(CLIENTE_ID.toString(),
-//                TipoDeConta.CONTA_POUPANCA.toString()))
-//                .thenReturn(HttpResponse.ok(dadosDeResposta()))
-//
-//        Mockito.`when`(bcb1.registra(createKeyPixRequest()))
-//                .thenReturn(HttpResponse.created(createPixKeyResponse()))
-//        //acao
-//        val response = grpcClient.regista(
-//                RegistraChavePixRequest.newBuilder()
-//                        .setIdDoCliente(CLIENTE_ID.toString())
-//                        .setTipoDeChave(TipoDeChave.EMAIL)
-//                        .setValorDaChave("william@email.com")
-//                        .setTipoDeConta(br.com.zup.william.TipoDeConta.CONTA_POUPANCA)
-//
-//                        .build())
-//
-//        //validacao
-//        with(response) {
-//            assertEquals(CLIENTE_ID.toString(),
-//                    response.idDoCliente)
-//            assertNotNull(response.pixId)
-//        }
-//
-//    }
+    @Test
+    fun `deve cadastrar uma chave pix EMAIL`() {
+        //cenario
+        Mockito.`when`(itau1.busca(CLIENTE_ID.toString(),
+                TipoDeConta.CONTA_POUPANCA.toString()))
+                .thenReturn(HttpResponse.ok(dadosDeResposta()))
+
+        Mockito.`when`(bcb1.registra(createKeyPixRequest()))
+                .thenReturn(HttpResponse.created(createPixKeyResponse()))
+        //acao
+        val response = grpcClient.regista(
+                RegistraChavePixRequest.newBuilder()
+                        .setIdDoCliente(CLIENTE_ID.toString())
+                        .setTipoDeChave(TipoDeChave.EMAIL)
+                        .setValorDaChave("william@email.com")
+                        .setTipoDeConta(br.com.zup.william.TipoDeConta.CONTA_POUPANCA)
+
+                        .build())
+
+        //validacao
+        with(response) {
+            assertEquals(CLIENTE_ID.toString(),
+                    response.idDoCliente)
+            assertNotNull(response.pixId)
+        }
+
+    }
 
     @Test
     fun `deve retornar um erro quando cliente não é encontrado`() {
@@ -276,23 +277,20 @@ internal class RegistaChavePixEndPointTest(
 
 
     fun pix(): ChavePix {
-        val conta = Conta(
-                "william",
-                "02467781054",
-                "ITAU",
-                "60701190",
-                "0001",
-                "3306"
-
-        )
-        val chavePix = ChavePix(
+        return ChavePix(
                 "c56dfef4-7901-44fb-84e2-a2cefb157890",
                 "william@email.com",
                 br.com.zup.william.registra.TipoDeChave.EMAIL,
                 TipoDeConta.CONTA_POUPANCA,
-                conta
+                conta = Conta(
+                        "Rafael M C Ponte",
+                        "02467781054",
+                        "ITAÚ UNIBANCO S.A.",
+                        Conta.ITAU_UNIBANCO_ISPB,
+                        "0001",
+                        "3306"
+                )
         )
-        return chavePix
     }
 
     fun createKeyPixRequest(): CreateKeyPixRequest {
@@ -300,13 +298,13 @@ internal class RegistaChavePixEndPointTest(
                 keyType = KeyType.EMAIL,
                 key = "william@email.com",
                 bankAccount = BankAccount(
-                        "60701190",
+                        Conta.ITAU_UNIBANCO_ISPB,
                         "0001",
                         "3306",
                         BankAccount.AccountType.SVGS
                 ), owner = Owner(
                 type = TipoDePessoa.NATURAL_PERSON,
-                "william",
+                "Rafael M C Ponte",
                 "02467781054"))
     }
 
@@ -315,13 +313,13 @@ internal class RegistaChavePixEndPointTest(
                 keyType = KeyType.EMAIL.toString(),
                 key = "william@email.com",
                 bankAccount = BankAccountResponse(
-                        "60701190",
+                        Conta.ITAU_UNIBANCO_ISPB,
                         "0001",
                         "3306",
                         TipoDaContaBCB.SVGS.toString()
                 ), owner = OwnerResponse(
                 type = TipoDePessoa.NATURAL_PERSON.toString(),
-                "william",
+                "Rafael M C Ponte",
                 "02467781054"),
                 createdAt = LocalDateTime.now()
         )
@@ -352,7 +350,7 @@ internal class RegistaChavePixEndPointTest(
                 TipoDeConta.CONTA_POUPANCA,
                 Instituicao(
                         "ITAÚ UNIBANCO S.A.",
-                        "60701190"
+                        Conta.ITAU_UNIBANCO_ISPB
                 ),
                 "0001",
                 "3306",
@@ -379,7 +377,7 @@ internal class RegistaChavePixEndPointTest(
 
     @Factory
     class grpc {
-        @Singleton
+        @Bean
         fun blockingSetup(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel):
                 RegistraKeyManagerPixGRPCServiceGrpc.RegistraKeyManagerPixGRPCServiceBlockingStub {
             return RegistraKeyManagerPixGRPCServiceGrpc.newBlockingStub(channel)

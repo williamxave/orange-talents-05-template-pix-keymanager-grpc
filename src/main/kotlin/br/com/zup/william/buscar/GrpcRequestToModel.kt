@@ -1,21 +1,24 @@
 package br.com.zup.william.buscar
 
 import br.com.zup.william.BuscarChavePixRequest
-import br.com.zup.william.exception.FiltroInvalidoException
-import io.micronaut.validation.validator.Validator
+import br.com.zup.william.BuscarChavePixRequest.FiltroCase.*
+import javax.validation.ConstraintViolationException
+import javax.validation.Validator
 
 fun BuscarChavePixRequest.toModel(validator: Validator): Filtro {
     val filtro = when (filtroCase) {
-        BuscarChavePixRequest.FiltroCase.PIXID -> pixId.let {
+
+        PIXID -> pixId.let {
             Filtro.PorPixId(it.clientId, it.pixId)
         }
-        BuscarChavePixRequest.FiltroCase.CHAVE -> Filtro.PorChave(chave)
-        BuscarChavePixRequest.FiltroCase.FILTRO_NOT_SET -> Filtro.Invalido()
+        CHAVE -> Filtro.PorChave(chave)
+
+        FILTRO_NOT_SET -> Filtro.Invalido()
     }
 
-    if (!filtro.equals(BuscarChavePixRequest.FiltroCase.PIXID)
-            || !filtro.equals(BuscarChavePixRequest.FiltroCase.CHAVE)) {
-        throw FiltroInvalidoException("Modo de pesquisa inválido")
+    val violations = validator.validate(filtro)
+    if (violations.isNotEmpty()) {
+        throw ConstraintViolationException(violations)
     }
 
     return filtro

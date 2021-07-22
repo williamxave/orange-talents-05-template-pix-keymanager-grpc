@@ -39,7 +39,12 @@ class ErrorHandlerInterceptor : MethodInterceptor<Any, Any> {
                 is  FiltroInvalidoException -> Status.INVALID_ARGUMENT
                         .withDescription(e.message)
 
+                is IllegalArgumentException -> Status.INVALID_ARGUMENT
+                        .withDescription(e.message)
+
                 else -> Status.INTERNAL
+                        .augmentDescription(e.stackTrace.toString())
+                        .withCause(e.cause)
                         .withDescription("Erro Desconhecido!")
             }
             responseObserver.onError(status.asRuntimeException())

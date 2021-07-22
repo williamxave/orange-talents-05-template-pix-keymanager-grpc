@@ -4,7 +4,7 @@ import br.com.zup.william.registra.Conta
 import io.micronaut.core.annotation.Introspected
 
 @Introspected
-class DeletePixKeyRequest(
+data class DeletePixKeyRequest(
         val key: String?,
         val participant: String?
 ) {

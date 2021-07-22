@@ -7,12 +7,12 @@ import br.com.zup.william.handler.ErrorHandler
 import br.com.zup.william.registra.ChavePixRepository
 import br.com.zup.william.registrabcb.RegistraChaveBCB
 import io.grpc.stub.StreamObserver
-import io.micronaut.validation.validator.Validator
 import javax.inject.Inject
 import javax.inject.Singleton
+import javax.validation.Validator
 
-@Singleton
 @ErrorHandler
+@Singleton
 class BuscarChaveEndPoint(
         @Inject private val chavePixRepository: ChavePixRepository,
         @Inject private val bcbClient: RegistraChaveBCB,
@@ -23,7 +23,7 @@ class BuscarChaveEndPoint(
                         responseObserver: StreamObserver<BuscarChavePixResponse>) {
 
         val filtro = request.toModel(validator)
-        val chaveInfo = filtro.filtra(chavePixRepository, bcbClient)
+        val chaveInfo = filtro.filtra(repository = chavePixRepository, bcbClient = bcbClient)
 
         responseObserver.onNext(BuscaChavePixResponseConverter().convert(chaveInfo))
         responseObserver.onCompleted()

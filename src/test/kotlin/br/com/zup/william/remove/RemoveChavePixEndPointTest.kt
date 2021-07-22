@@ -2,6 +2,7 @@ package br.com.zup.william.remove
 
 import br.com.zup.william.RemoveChavePixRequest
 import br.com.zup.william.RemoveKeyManagerPixGRPCServiceGrpc
+import br.com.zup.william.buscar.BuscarChaveEndPointTest
 import br.com.zup.william.registra.*
 import br.com.zup.william.registrabcb.RegistraChaveBCB
 import io.grpc.ManagedChannel
@@ -35,16 +36,11 @@ internal class RemoveChavePixEndPointTest(
     lateinit var bcb: RegistraChaveBCB
 
     lateinit var CHAVE_EXISTENTE: ChavePix
+    var CLIENTE_ID: String = UUID.randomUUID().toString()
 
     @BeforeEach
     internal fun setUp() {
-        CHAVE_EXISTENTE = chavePixRepository.save(
-                chave(
-                        tipo = TipoDeChave.EMAIL,
-                        chave = "william@email.com",
-                        clienteId = UUID.randomUUID().toString()
-                )
-        )
+        CHAVE_EXISTENTE = chavePixRepository.save(chave(TipoDeChave.EMAIL, "william@email.com", CLIENTE_ID.toString()))
 
     }
 
@@ -53,31 +49,29 @@ internal class RemoveChavePixEndPointTest(
         chavePixRepository.deleteAll()
     }
 
-//    @Test
-//    fun `deve remover uma chave pix existente`() {
-//
-//        Mockito.`when`(bcb.deletar("william@email.com",
-//                DeletePixKeyRequest("william@email.com")))
-//                .thenReturn(HttpResponse.ok(
-//                        DeletePixKeyResponse(
-//                                "william@email.com",
-//                                Conta.ITAU_UNIBANCO_ISPB,
-//                                LocalDateTime.now())))
-//
-//        val response = grpcClientezinho.remove(
-//                RemoveChavePixRequest
-//                        .newBuilder()
-//                        .setPixId(CHAVE_EXISTENTE.id)
-//                        .setIdDoCliente(CHAVE_EXISTENTE.clienteId)
-//                        .build())
-//
-//        with(response) {
-//            assertEquals(CHAVE_EXISTENTE.id, response.pixId)
-//            assertEquals(CHAVE_EXISTENTE.clienteId, response.idDoCliente)
-//
-//        }
-//
-//    }
+    @Test
+    fun `deve remover uma chave pix existente`() {
+        Mockito.`when`(bcb.deletar("william@email.com",
+                DeletePixKeyRequest("william@email.com")))
+                .thenReturn(HttpResponse.ok(
+                        DeletePixKeyResponse(
+                                "william@email.com",
+                                Conta.ITAU_UNIBANCO_ISPB,
+                                LocalDateTime.now())))
+
+        val response = grpcClientezinho.remove(
+                RemoveChavePixRequest
+                        .newBuilder()
+                        .setPixId(CHAVE_EXISTENTE.id)
+                        .setIdDoCliente(CHAVE_EXISTENTE.clienteId)
+                        .build())
+        println(response).toString()
+
+        with(response) {
+            assertEquals("Chave pix deletada com sucesso -- ${CHAVE_EXISTENTE.id}", response.mensagem)
+        }
+
+    }
 
     @Test
     fun `nao deve remover uma chave pix existente quando ocorre algum erro no bcb`() {
@@ -103,13 +97,10 @@ internal class RemoveChavePixEndPointTest(
 
     @Test
     fun `NAO deve deletar chave Pix se o cliente nao for o dono`() {
-        chavePixRepository.deleteAll()
-        val chavePix = geraChave()
-        chavePixRepository.save(chavePix)
         val error = assertThrows<StatusRuntimeException> {
             grpcClientezinho.remove(RemoveChavePixRequest
                     .newBuilder()
-                    .setPixId(chavePix.id)
+                    .setPixId(CHAVE_EXISTENTE.id)
                     .setIdDoCliente("2387232873")
                     .build())
 
@@ -122,14 +113,11 @@ internal class RemoveChavePixEndPointTest(
 
     @Test
     fun `NAO deve deletar chave Pix se a chave nao existe`() {
-        chavePixRepository.deleteAll()
-        val chavePix = geraChave()
-        chavePixRepository.save(chavePix)
         val error = assertThrows<StatusRuntimeException> {
             grpcClientezinho.remove(RemoveChavePixRequest
                     .newBuilder()
                     .setPixId("3726327323823")
-                    .setIdDoCliente(chavePix.clienteId)
+                    .setIdDoCliente(CHAVE_EXISTENTE.clienteId)
                     .build())
 
         }
@@ -138,49 +126,28 @@ internal class RemoveChavePixEndPointTest(
 
     }
 
-
     fun chave(
-            tipo: TipoDeChave,
+            tipoDeChave: TipoDeChave,
             chave: String = UUID.randomUUID().toString(),
             clienteId: String = UUID.randomUUID().toString()
     ): ChavePix {
         return ChavePix(
                 clienteId,
                 chave,
-                tipo,
-                TipoDeConta.CONTA_POUPANCA,
-                Conta(
-                        "william",
-                        "87664996074",
-                        "ITAU",
-                        "60701190",
-                        "0001",
-                        "3306"
-                )
+                tipoDeChave,
+                tipoDeConta = TipoDeConta.CONTA_CORRENTE,
+                conta = Conta(
+                        agencia = "3306",
+                        nome = "william",
+                        cpf = "02467781054",
+                        ispb = Conta.ITAU_UNIBANCO_ISPB,
+                        numero = "0001",
+                        nomeInstituicao = "ITAU S.A.",
+
+                        )
         )
     }
 
-    fun geraChave(): ChavePix {
-        val conta = Conta(
-                "william",
-                "87664996074",
-                "ITAU",
-                "60701190",
-                "0001",
-                "3306"
-
-
-        )
-        val chavePix = ChavePix(
-                "c56dfef4-7901-44fb-84e2-a2cefb157890",
-                "william@email.com",
-                TipoDeChave.EMAIL,
-                TipoDeConta.CONTA_POUPANCA,
-                conta
-        )
-
-        return chavePix
-    }
 
 
     @MockBean(RegistraChaveBCB::class)
@@ -197,20 +164,3 @@ internal class RemoveChavePixEndPointTest(
         }
     }
 }
-
-
-//        Mockito.`when`(bcb.deletar("william@emai.com",
-//                DeletePixKeyRequest("william@email.com")))
-//                .thenReturn(HttpResponse.ok(DeletePixKeyResponse("william@email.com",
-//                        Conta.ITAU_UNIBANCO_ISPB, LocalDateTime.now())))
-//        // acao
-//        val response = grpcClientezinho.remove(
-//                RemoveChavePixRequest.newBuilder()
-//                .setPixId(chavePix.id)
-//                .setIdDoCliente(chavePix.clienteId)
-//                .build())
-//
-//        //validacao
-//        with(response){
-//            assertEquals(chavePix.id, "c56dfef4-7901-44fb-84e2-a2cefb157890")
-//        }

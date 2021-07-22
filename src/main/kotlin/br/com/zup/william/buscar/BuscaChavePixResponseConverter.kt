@@ -1,21 +1,23 @@
 package br.com.zup.william.buscar
 
 import br.com.zup.william.BuscarChavePixResponse
+import br.com.zup.william.TipoDeChave
+import br.com.zup.william.TipoDeConta
 import com.google.protobuf.Timestamp
 import java.time.ZoneId
 
 class BuscaChavePixResponseConverter {
-    fun convert(chaveInfo: ChavePixInfo): BuscarChavePixResponse {
+    fun convert(chaveInfo: ChavePixInfo?): BuscarChavePixResponse {
         return BuscarChavePixResponse.newBuilder()
-                .setClienteId(chaveInfo.clienteId?.toString() ?: "") // Protobuf usa "" como default value para String
-                .setPixId(chaveInfo.pixId?.toString() ?: "") // Protobuf usa "" como default value para String
+                .setClienteId(chaveInfo?.clienteId ?: "") // Protobuf usa "" como default value para String
+                .setPixId(chaveInfo?.pixId ?: "") // Protobuf usa "" como default value para String
                 .setChave(BuscarChavePixResponse.ChavePix
                         .newBuilder()
-                        .setTipoDaChave(br.com.zup.william.TipoDeChave.valueOf(chaveInfo.tipo.name))
-                        .setChave(chaveInfo.chave)
+                        .setTipoDaChave(TipoDeChave.valueOf(chaveInfo?.tipo!!.name))
+                        .setChave(chaveInfo?.chave)
                         .setConta(BuscarChavePixResponse.ChavePix.ContaInfo.newBuilder()
-                                .setTipo(br.com.zup.william.TipoDeConta.valueOf(chaveInfo.tipoDeConta.name))
-                                .setInstituicao(chaveInfo.conta.nomeInstituicao)
+                                .setTipo(TipoDeConta.valueOf(chaveInfo.tipoDeConta!!.name))
+                                .setInstituicao(chaveInfo.conta!!.nomeInstituicao)
                                 .setNomeDoTitular(chaveInfo.conta.nome)
                                 .setCpfDoTitular(chaveInfo.conta.cpf)
                                 .setAgencia(chaveInfo.conta.agencia)
@@ -26,10 +28,22 @@ class BuscaChavePixResponseConverter {
                             val createdAt = it?.atZone(ZoneId.of("UTC"))?.toInstant()
                             Timestamp.newBuilder()
                                     .setSeconds(createdAt!!.epochSecond)
-                                    .setNanos(createdAt!!.nano)
+                                    .setNanos(createdAt.nano)
                                     .build()
                         })
                 )
                 .build()
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
+
+
 }

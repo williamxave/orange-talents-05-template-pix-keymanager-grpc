@@ -39,9 +39,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     implementation("org.hibernate.validator:hibernate-validator:7.0.0.Final")
+   //implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("mysql:mysql-connector-java")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+
 
 
 

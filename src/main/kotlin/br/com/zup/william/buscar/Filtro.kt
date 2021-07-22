@@ -26,6 +26,7 @@ sealed class Filtro {
                     .map(ChavePixInfo::of)
                     .orElseThrow { ChavePixNaoEcontradaException("Chave Pix não encontrada") }
         }
+
     }
 
     @Introspected

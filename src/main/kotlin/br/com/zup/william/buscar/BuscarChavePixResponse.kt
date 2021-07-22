@@ -9,31 +9,33 @@ import br.com.zup.william.registrabcb.Owner
 import java.time.LocalDateTime
 
 data class BuscarChavePixResponse(
-        val keyType: KeyType,
-        val key: String,
-        val bankAccount: BankAccount,
-        val owner: Owner,
+        val keyType: KeyType?,
+        val key: String?,
+        val bankAccount: BankAccount?,
+        val owner: Owner?,
         val createdAt: LocalDateTime?
 ) {
 
     fun toModel(): ChavePixInfo {
         return ChavePixInfo(
-                tipo = keyType.tipo!!,
-                chave = this.key,
-                tipoDeConta = when (this.bankAccount.accountType) {
+                tipo = keyType?.tipo!!,
+                chave = this.key!!,
+                tipoDeConta = when (this.bankAccount!!.accountType) {
                     BankAccount.AccountType.SVGS -> CONTA_CORRENTE
                     BankAccount.AccountType.CACC -> CONTA_POUPANCA
                 },
                 conta = Conta(
                         agencia = bankAccount.participant,
-                        nome = owner.name,
+                        nome = owner!!.name,
                         cpf = owner.taxIdNumber,
                         ispb = bankAccount.branch,
                         numero = bankAccount.accountNumber,
-                        nomeInstituicao = ""
+                        nomeInstituicao = "ITAU S.A."
                 ),
                 registradaEm = createdAt
         )
     }
+
+
 }
 

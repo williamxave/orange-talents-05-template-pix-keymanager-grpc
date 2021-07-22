@@ -1,5 +1,6 @@
 package br.com.zup.william.registra
 
+import io.micronaut.core.annotation.Introspected
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
@@ -18,7 +19,7 @@ class ChavePix(
     @Id
     var id: String = UUID.randomUUID().toString()
 
-    var criadaEm: LocalDateTime? = null
+    var criadaEm: LocalDateTime = LocalDateTime.now()
 
 
     fun pertenceAo(clienteId: String) = this.clienteId.equals(clienteId)
@@ -35,5 +36,40 @@ class ChavePix(
         }
         return false
     }
+
+
+
+    override fun toString(): String {
+        return "ChavePix(clienteId='$clienteId', valorDaChave='$valorDaChave', tipoDeChave=$tipoDeChave, tipoDeConta=$tipoDeConta, conta=$conta, id='$id', criadaEm=$criadaEm)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ChavePix
+
+        if (clienteId != other.clienteId) return false
+        if (valorDaChave != other.valorDaChave) return false
+        if (tipoDeChave != other.tipoDeChave) return false
+        if (tipoDeConta != other.tipoDeConta) return false
+        if (conta != other.conta) return false
+        if (id != other.id) return false
+        if (criadaEm != other.criadaEm) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = clienteId.hashCode()
+        result = 31 * result + valorDaChave.hashCode()
+        result = 31 * result + tipoDeChave.hashCode()
+        result = 31 * result + tipoDeConta.hashCode()
+        result = 31 * result + conta.hashCode()
+        result = 31 * result + id.hashCode()
+        result = 31 * result + (criadaEm?.hashCode() ?: 0)
+        return result
+    }
+
 
 }

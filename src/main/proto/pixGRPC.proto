@@ -21,6 +21,7 @@ service BuscarKeyManagerPixGRPCService{
   rpc buscar (BuscarChavePixRequest) returns (BuscarChavePixResponse){}
 }
 
+
 message BuscarChavePixRequest{
   message FiltroPorPixId {
     string clientId = 1;

@@ -62,7 +62,7 @@ class ValidaChavePix(
 
         //INSERE DATA DE CRIACAO NA CHAVE, DATA ESSA VINDO DA BCB
         val data = responseChamaBcb.body().createdAt
-        chavePix.criadaEm = data
+        chavePix.criadaEm = data!!
 
         //Verifica se o tipo de chave é random se for vai atualizar e utilizar a chave,
         //random que veio de response o BCB

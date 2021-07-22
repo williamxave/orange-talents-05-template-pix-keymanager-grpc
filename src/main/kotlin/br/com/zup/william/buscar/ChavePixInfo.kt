@@ -6,15 +6,14 @@ import br.com.zup.william.registra.TipoDeChave
 import br.com.zup.william.registra.TipoDeConta
 import java.time.LocalDateTime
 
-
 data class ChavePixInfo(
         val pixId: String?= null,
         val clienteId: String? = null,
-        val tipo: TipoDeChave,
-        val chave: String,
-        val tipoDeConta: TipoDeConta,
-        val conta: Conta,
-        val registradaEm: LocalDateTime? = null
+        val tipo: TipoDeChave?,
+        val chave: String?,
+        val tipoDeConta: TipoDeConta?,
+        val conta: Conta?,
+        val registradaEm: LocalDateTime?
 ) {
 
     companion object {
