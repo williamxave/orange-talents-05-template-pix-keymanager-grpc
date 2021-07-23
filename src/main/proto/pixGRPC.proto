@@ -21,6 +21,26 @@ service BuscarKeyManagerPixGRPCService{
   rpc buscar (BuscarChavePixRequest) returns (BuscarChavePixResponse){}
 }
 
+service ListarrKeyManagerPixGRPCService{
+  rpc listar (ListarChavePixRequest) returns (ListarChavePixResponse){}
+}
+message ListarChavePixRequest{
+  string idDoCliente = 1;
+}
+
+message ListarChavePixResponse{
+  message Listar{
+    string pixId = 1;
+    string idDoCliente = 2;
+    TipoDeChave tipoDeChave = 3;
+    string valorDaChave = 4;
+    TipoDeConta tipoDeConta = 5;
+    google.protobuf.Timestamp criadaEm= 6;
+  }
+  string clientId = 1;
+  repeated Listar chaves = 2;
+
+}
 
 message BuscarChavePixRequest{
   message FiltroPorPixId {
