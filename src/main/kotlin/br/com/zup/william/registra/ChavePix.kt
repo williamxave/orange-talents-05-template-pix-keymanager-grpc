@@ -1,7 +1,11 @@
 package br.com.zup.william.registra
 
+import br.com.zup.william.ListarChavePixResponse
+import br.com.zup.william.exception.ChavePixNaoEcontradaException
+import com.google.protobuf.Timestamp
 import io.micronaut.core.annotation.Introspected
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -16,6 +20,7 @@ class ChavePix(
         @field:NotNull @field:Enumerated(EnumType.STRING) val tipoDeConta: TipoDeConta,
         @Embedded @field:NotNull val conta: Conta
 ) {
+
     @Id
     var id: String = UUID.randomUUID().toString()
 
@@ -25,18 +30,17 @@ class ChavePix(
     fun pertenceAo(clienteId: String) = this.clienteId.equals(clienteId)
 
     //Quando registrar no bcb e a chave for random o outro sistema vai gerar a chave
-    fun chaveAleatoria(): Boolean{
+    fun chaveAleatoria(): Boolean {
         return tipoDeChave == TipoDeChave.CHAVE_ALEATORIA
     }
 
     fun atualizaChave(chave: String): Boolean {
-        if(chaveAleatoria()){
+        if (chaveAleatoria()) {
             this.valorDaChave = chave
             return true
         }
         return false
     }
-
 
 
     override fun toString(): String {

@@ -3,12 +3,10 @@ package br.com.zup.william.listar
 import br.com.zup.william.*
 import br.com.zup.william.exception.ChavePixNaoEcontradaException
 import br.com.zup.william.handler.ErrorHandler
-import br.com.zup.william.registra.ChavePix
 import br.com.zup.william.registra.ChavePixRepository
 import com.google.protobuf.Timestamp
 import io.grpc.stub.StreamObserver
 import java.time.ZoneId
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
