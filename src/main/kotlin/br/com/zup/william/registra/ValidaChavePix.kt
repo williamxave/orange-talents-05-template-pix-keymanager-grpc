@@ -70,7 +70,7 @@ class ValidaChavePix(
 
 
         chavePixRepository.save(chavePix)
-        log.info("Chave cadastrada no BCB")
+        log.info("Chave Cadastrada no BCB e localmente")
 
 
         //Retorna a chave para o endPoint gRPC
